@@ -7,8 +7,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "outDir": "dist",
     "preserveConstEnums": false,
     "removeComments": false,
@@ -18,7 +18,7 @@
     "strictNullChecks": true,
     "target": "ES2017"
   },
-  "include": ["./src"],
+  "include": ["src"],
   "exclude": ["__tests__", "node_modules", "dist", "tests", "jest", "**/*.test.ts", "**/*.spec.ts"],
   "compileOnSave": false
 }

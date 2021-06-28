@@ -1,8 +1,8 @@
 import getProviderContent from './getProviderContent'
 import getUseModelContent from './getUseModelContent'
 import { EOL } from 'os'
-import { winPath } from '.'
-import { genImports, genModels, genExtraModels, ModelItem } from '.'
+import { winPath } from '..'
+import { genImports, genModels, genExtraModels, ModelItem } from '..'
 
 function getModels(files: string[], absSrcPath: string) {
   const sortedModels = genModels(files, absSrcPath)

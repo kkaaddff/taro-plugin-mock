@@ -1,4 +1,4 @@
-import path from 'path'
+import * as path from 'path'
 import { EOL } from 'os'
 import { readFileSync } from 'fs'
 import * as parser from '@babel/parser'
