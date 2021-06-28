@@ -1,18 +1,13 @@
-import { join } from 'path';
-import { utils } from 'umi';
-
-const { winPath } = utils;
-
 export default function (
   imports: string,
   userModels: string,
   extraImports: string,
-  extraModels: string,
+  extraModels: string
 ) {
   if (!extraImports && !imports) {
     return `import React from 'react';
 export default ({ children }: { children: React.ReactNode }) => children
-`;
+`
   }
   return `import React from 'react';
 ${extraImports}
@@ -52,5 +47,5 @@ export default ({ children }: { children: React.ReactNode }) => {
     </UmiContext.Provider>
   )
 }
-`;
+`
 }
