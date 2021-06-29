@@ -14,7 +14,10 @@
   "files": [
     "src",
     "dist",
+    "tpl",
+    "typings",
     "index.js",
+    "README.md",
     "package.json"
   ],
   "repository": {
@@ -36,8 +39,9 @@
     "@types/lodash": "^4.14.170",
     "fs-extra": "^10.0.0",
     "glob": "^7.1.7",
+    "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "lodash-es": "^4.17.21"
+    "watch": "^1.0.2"
   },
   "devDependencies": {
     "@types/glob": "^7.1.3",

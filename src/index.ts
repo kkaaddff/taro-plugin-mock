@@ -5,6 +5,7 @@ import { getTmpFile } from './utils/tpl'
 import * as Mustache from 'mustache'
 import { DIR_NAME_IN_TMP } from './constants'
 import * as lodash from 'lodash'
+import startWatcher, { getModelsDirs } from './watcher'
 
 const MODEL_DIR = 'models'
 const PROJECT_PATH = process.cwd()
@@ -13,48 +14,54 @@ const TARO_CACHE_PATH = join(ABS_SRC_PATH, '.taro')
 
 export default (ctx) => {
   ctx.onBuildStart(() => {
-    fse.ensureDirSync(TARO_CACHE_PATH)
-    const files = getAllModels()
-    const tmpFiles = getTmpFile(files, [], ABS_SRC_PATH)
+    const WatcherFiles = { dirs: getModelsDirs() }
+    buildUseModelContent()
+    startWatcher(buildUseModelContent, WatcherFiles)
+  })
+}
 
-    // provider.tsx
-    writeTmpFile({
-      path: `${DIR_NAME_IN_TMP}/Provider.tsx`,
-      content: tmpFiles.providerContent,
-    })
+export const buildUseModelContent = () => {
+  fse.ensureDirSync(TARO_CACHE_PATH)
+  const files = getAllModels()
+  const tmpFiles = getTmpFile(files, [], ABS_SRC_PATH)
 
-    // useModel.tsx
-    writeTmpFile({
-      path: `${DIR_NAME_IN_TMP}/useModel.tsx`,
-      content: tmpFiles.useModelContent,
-    })
+  // provider.tsx
+  writeTmpFile({
+    path: `${DIR_NAME_IN_TMP}/Provider.tsx`,
+    content: tmpFiles.providerContent,
+  })
 
-    // runtime.tsx
-    writeTmpFile({
-      path: `${DIR_NAME_IN_TMP}/runtime.tsx`,
-      content: Mustache.render(
-        fse.readFileSync(join(__dirname, '..', 'tpl', 'runtime.tsx.tpl'), 'utf-8'),
-        {}
-      ),
-    })
+  // useModel.tsx
+  writeTmpFile({
+    path: `${DIR_NAME_IN_TMP}/useModel.tsx`,
+    content: tmpFiles.useModelContent,
+  })
 
-    // constant.tsx
-    writeTmpFile({
-      path: `${DIR_NAME_IN_TMP}/helpers/constant.tsx`,
-      content: fse.readFileSync(join(__dirname, '..', 'tpl', 'constant.tsx.tpl'), 'utf-8'),
-    })
+  // runtime.tsx
+  writeTmpFile({
+    path: `${DIR_NAME_IN_TMP}/runtime.tsx`,
+    content: Mustache.render(
+      fse.readFileSync(join(__dirname, '..', 'tpl', 'runtime.tsx.tpl'), 'utf-8'),
+      {}
+    ),
+  })
 
-    // dispatcher.tsx
-    writeTmpFile({
-      path: `${DIR_NAME_IN_TMP}/helpers/dispatcher.tsx`,
-      content: fse.readFileSync(join(__dirname, '..', 'tpl', 'dispatcher.tsx.tpl'), 'utf-8'),
-    })
+  // constant.tsx
+  writeTmpFile({
+    path: `${DIR_NAME_IN_TMP}/helpers/constant.tsx`,
+    content: fse.readFileSync(join(__dirname, '..', 'tpl', 'constant.tsx.tpl'), 'utf-8'),
+  })
 
-    // executor.tsx
-    writeTmpFile({
-      path: `${DIR_NAME_IN_TMP}/helpers/executor.tsx`,
-      content: fse.readFileSync(join(__dirname, '..', 'tpl', 'executor.tsx.tpl'), 'utf-8'),
-    })
+  // dispatcher.tsx
+  writeTmpFile({
+    path: `${DIR_NAME_IN_TMP}/helpers/dispatcher.tsx`,
+    content: fse.readFileSync(join(__dirname, '..', 'tpl', 'dispatcher.tsx.tpl'), 'utf-8'),
+  })
+
+  // executor.tsx
+  writeTmpFile({
+    path: `${DIR_NAME_IN_TMP}/helpers/executor.tsx`,
+    content: fse.readFileSync(join(__dirname, '..', 'tpl', 'executor.tsx.tpl'), 'utf-8'),
   })
 }
 
