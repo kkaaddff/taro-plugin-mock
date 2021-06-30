@@ -4,7 +4,7 @@ export default function () {
     // @ts-ignore
     import {isEqual} from 'lodash';
     // @ts-ignore
-    import { UmiContext } from './helpers/constant';
+    import { UCContext } from './helpers/constant';
     import { Model, models } from './Provider';
     
     export type Models<T extends keyof typeof models> = Model<T>[T]
@@ -18,7 +18,7 @@ export default function () {
     ) : typeof updater extends undefined ? Model<T>[T] : ReturnType<NonNullable<typeof updater>>{
     
       type RetState = typeof updater extends undefined ? Model<T>[T] : ReturnType<NonNullable<typeof updater>>
-      const dispatcher = useContext<any>(UmiContext);
+      const dispatcher = useContext<any>(UCContext);
       const updaterRef = useRef(updater);
       updaterRef.current = updater;
       const [state, setState] = useState<RetState>(

@@ -1,5 +1,5 @@
 {
-  "name": "@tarojs/plugin-model",
+  "name": "tarojs-plugin-model",
   "version": "0.0.1",
   "description": "Taro 数据 useModel 插件",
   "main": "index.js",

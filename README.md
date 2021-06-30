@@ -1,20 +1,21 @@
-# @tarojs/plugin-mock
+# taro-plugin-model
 
-> Taro 数据 Mock 插件
+> inspired by [@umijs/plugin-model](https://umijs.org/zh-CN/plugins/plugin-model)
 
-## 安装
+一种基于 `hooks` 范式的简易数据管理方案（部分场景可以取代 `dva`），通常用于中台项目的全局共享数据。
 
-在 Taro 项目根目录下安装
+我们都知道自定义 `hooks` 是逻辑复用的利器，但我们也知道它不能复用状态，就和 `react` 内置的 `hooks` 一样，每次调用产生的状态都是相互隔离、无关的。那么，在业务开发中，如果我们需要提取的逻辑和状态都希望能够在多个组件中『共享』，就像其他数据流管理工具（`dva`, `mobx`）一样，`taro-plugin-model` 就是一个不错的选择。
 
-```bash
-$ npm i @tarojs/plugin-mock --save
-```
+## 启用方式
 
-## 使用
-
-### 引入插件
+#### 安装
 
 请确保 Taro CLI 已升级至 Taro 2/3 的最新版本。
+
+```bash
+# 安装依赖
+$ yarn add taro-plugin-model
+```
 
 修改项目 `config/index.js` 中的 plugins 配置为如下
 
@@ -30,72 +31,73 @@ const config = {
 }
 ```
 
-这样在 `taro build` 编译完后就会启动一个数据 mock 服务器。
+`src/models`、`src/**/models` 目录下有 hooks model 时启用。
 
-### 参数
+这样在 `taro build` & `npm start` 的时候会编译并在 `.taro` 缓存文件夹中生成所需要的 hooks 上下文
 
-Mock 插件可以接受如下参数：
+## 介绍
 
-| 参数项 | 类型 | 是否可选 | 用途 |
-| :-----| :---- | :---- | :---- |
-| host | string | 是 | 设置数据 mock 服务地址，默认为 127.0.0.1 |
-| port | number | 是 | 设置数据 mock 服务端口，默认为 9527 |
-| mocks | object | 是 | 设置数据 mock 接口 |
+我们约定在 `src/models` 目录下的文件为项目定义的 model 文件。每个文件需要默认导出一个 function，该 function 定义了一个 Hook，不符合规范的文件我们会过滤掉。
 
-其中 `mocks` 参数是用于设置数据 mock 接口，以 k-v 的方式进行设置，接口的 HTTP 方法通过在 key 中进行指定，例如：
+文件名则对应最终 model 的 name，你可以通过插件提供的 API 来消费 model 中的数据。
 
-```
-{
-  'GET /api/user/1': {
-    name: luckyadam
-  },
+所谓 hooks model 文件，就是自定义 `hooks` 模块，没有任何需要使用者关注的黑魔法。请看示例：
 
-  'POST /api/upload': {
-    file: xxxx
+**src/models/useAuthModel.js**
+
+```js
+import { useState, useCallback } from 'react'
+
+export default function useAuthModel() {
+  const [user, setUser] = useState(null)
+
+  const signin = useCallback((account, password) => {
+    // signin implementation
+    // setUser(user from signin API)
+  }, [])
+
+  const signout = useCallback(() => {
+    // signout implementation
+    // setUser(null)
+  }, [])
+
+  return {
+    user,
+    signin,
+    signout,
   }
 }
 ```
 
-支持的 HTTP 方法有：`['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']`
+> 使用者书写的就是一个普通的自定义 `hooks`，但 `taro-plugin-model` 把其中的状态变成了『全局状态』，多个组件中使用该 `model` 时，拿到的同一份状态。
 
-如果项目中的接口过多，也可以不通过插件的 `mocks` 配置来设置接口，可以直接在项目中创建一个 `mock` 目录，在 `mock` 下添加接口配置文件来设置接口，接口配置文件支持使用 ES6 语法以及 TS，例如。
+### 在组件中使用 model
 
-如上配置可以改写成，在项目根目录下创建 `mock` 目录，添加一个 `api.ts` 文件，内容如下：
+转到[API/useModel](#usemodel)
 
-```typescript
-// mock/api.ts
+## 配置
 
-export default {
-  'GET /api/user/1': {
-    name: luckyadam
-  },
+该插件无配置项。
 
-  'POST /api/upload': {
-    file: xxxx
-  }
+## API
+
+### useModel
+
+`useModel` 是一个 Hook，提供消费 Model 的能力，使用示例如下：
+
+```js
+import { useModel } from 'umi'
+
+export default () => {
+  const { user, fetchUser } = useModel('user', (model) => ({
+    user: model.user,
+    fetchUser: model.fetchUser,
+  }))
+  return <>hello</>
 }
 ```
 
-同时也支持使用 [`mockjs`](http://mockjs.com/) 来生成 mock 数据
+`useModel` 有两个参数，`namespace` 和 `updater`。
 
-安装 `mockjs`
-
-```bash
-$ npm i mockjs --save
-```
-
-使用如下
-
-```ts
-// /mock/api.ts
-import mockjs from 'mockjs'
-
-export default {
-  'GET /api/tags': mockjs.mock({
-    'list|1-10': [{
-      // 属性 id 是一个自增数，起始值为 1，每次增 1
-      'id|+1': 1
-    }]
-  })
-}
-```
+- `namespace` - 就是 hooks model 文件的文件名，如上面例子里的 `useAuthModel`
+- `updater` - 可选参数。在 hooks model 返回多个状态，但使用组件仅引用了其中部分状态，并且希望仅在这几个状态更新时 rerender 时使用（性能相关）。

@@ -17,7 +17,7 @@ import Dispatcher from './helpers/dispatcher';
 // @ts-ignore
 import Executor from './helpers/executor';
 // @ts-ignore
-import { UmiContext } from './helpers/constant';
+import { UCContext } from './helpers/constant';
 
 export const models = { ${extraModels ? `${extraModels}, ` : ''}${userModels} };
 
@@ -33,7 +33,7 @@ const Exe = Executor!;
 export default ({ children }: { children: React.ReactNode }) => {
 
   return (
-    <UmiContext.Provider value={dispatcher}>
+    <UCContext.Provider value={dispatcher}>
       {
         Object.entries(models).map(pair => (
           <Exe key={pair[0]} namespace={pair[0]} hook={pair[1] as any} onUpdate={(val: any) => {
@@ -44,7 +44,7 @@ export default ({ children }: { children: React.ReactNode }) => {
         ))
       }
       {children}
-    </UmiContext.Provider>
+    </UCContext.Provider>
   )
 }
 `

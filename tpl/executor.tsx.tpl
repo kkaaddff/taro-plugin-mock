@@ -22,19 +22,19 @@ export default (props: ExecutorProps) => {
     ) {
       try {
         let count = Object.keys(
-          ((window as any)._umi_useModel_dev_tool_log || {})[namespace] || {},
+          ((window as any)._uc_useModel_dev_tool_log || {})[namespace] || {},
         ).length;
-        (window as any)._umi_useModel_dev_tool = Object.assign(
-          (window as any)._umi_useModel_dev_tool || {},
+        (window as any)._uc_useModel_dev_tool = Object.assign(
+          (window as any)._uc_useModel_dev_tool || {},
           {
             [namespace]: data,
           },
         );
-        (window as any)._umi_useModel_dev_tool_log = Object.assign(
-          (window as any)._umi_useModel_dev_tool_log || {},
+        (window as any)._uc_useModel_dev_tool_log = Object.assign(
+          (window as any)._uc_useModel_dev_tool_log || {},
           {
             [namespace]: Object.assign(
-              ((window as any)._umi_useModel_dev_tool_log || {})[namespace] ||
+              ((window as any)._uc_useModel_dev_tool_log || {})[namespace] ||
                 {},
               {
                 [count]: data,
@@ -43,7 +43,7 @@ export default (props: ExecutorProps) => {
           },
         );
         window.dispatchEvent(
-          new CustomEvent('_umi_useModel_update', {
+          new CustomEvent('_uc_useModel_update', {
             detail: {
               namespace,
               time: Date.now(),
