@@ -20,19 +20,15 @@
     "README.md",
     "package.json"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NervJS/taro-plugin-mock.git"
-  },
   "keywords": [
     "Taro"
   ],
   "author": "luckyadam",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/NervJS/tarojs-plugin-mock/issues"
+    "url": "https://github.com/kkaaddff/taro-plugin-model"
   },
-  "homepage": "https://github.com/NervJS/tarojs-plugin-mock#readme",
+  "homepage": "https://github.com/kkaaddff/taro-plugin-model#readme",
   "dependencies": {
     "@babel/core": "^7.14.6",
     "@types/fs-extra": "^9.0.11",
