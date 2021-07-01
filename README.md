@@ -25,7 +25,7 @@ const config = {
   plugins: [
     ...其余插件
 
-    '@tarojs/plugin-mock'
+    'taro-plugin-model'
   ]
   ...
 }
