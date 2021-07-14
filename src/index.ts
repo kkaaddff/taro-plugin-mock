@@ -16,7 +16,10 @@ export default (ctx) => {
   ctx.onBuildStart(() => {
     const WatcherFiles = { dirs: getModelsDirs() }
     buildUseModelContent()
-    startWatcher(buildUseModelContent, WatcherFiles)
+
+    if (ctx.runOpts.options.isWatch) {
+      startWatcher(buildUseModelContent, WatcherFiles)
+    }
   })
 }
 

@@ -24,7 +24,6 @@ const config = {
   ...
   plugins: [
     ...其余插件
-
     'taro-plugin-model'
   ]
   ...
